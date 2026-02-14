@@ -21,7 +21,6 @@
             perspective: 2000px;
         }
 
-        /* Magical Background Canvas */
         #bgCanvas {
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
@@ -75,15 +74,19 @@
             justify-content: center; align-items: center;
             padding: 25px; box-sizing: border-box;
             border: 1px solid #ddd;
+            overflow: hidden;
         }
 
-        .front { border-radius: 0 15px 15px 0; z-index: 2; }
-        .back { 
-            transform: rotateY(180deg); 
-            background: #fffcf0; 
-            border-radius: 15px 0 0 15px; 
-            z-index: 1;
+        /* Decorations */
+        .front::before, .back::before {
+            content: '🌸'; position: absolute; top: 10px; right: 10px; font-size: 1.5rem; color: var(--purple);
         }
+        .front::after, .back::after {
+            content: '🌿'; position: absolute; bottom: 10px; left: 10px; font-size: 1.5rem; color: var(--yellow-green);
+        }
+
+        .front { border-radius: 0 15px 15px 0; z-index: 2; background: #fff; }
+        .back { transform: rotateY(180deg); background: #fffcf0; border-radius: 15px 0 0 15px; z-index: 1; }
 
         .page img {
             width: 100%; height: 75%;
@@ -95,15 +98,14 @@
         .message-text {
             font-size: 1.1rem; color: #4a148c;
             text-align: center; font-style: italic;
-            line-height: 1.4; padding: 10px;
+            line-height: 1.5; padding: 10px;
         }
 
         .underline-name {
             margin-top: 15px;
             font-weight: bold;
-            color: var(--purple);
             text-decoration: underline;
-            font-size: 0.9rem;
+            font-size: 1rem;
         }
 
         .cover-front {
@@ -147,83 +149,73 @@
                 <h2 style="color: var(--yellow-green); margin-top: 10px;">For My Langging</h2>
                 <div style="font-size: 4rem; margin: 20px;">🎁</div>
                 <p>Click "Next" to reveal our story...</p>
-                <div class="underline-name" style="color:white;">from your toothache lang-lang</div>
+                <div class="underline-name" style="color:var(--yellow-green);">from your toothache lang2x</div>
             </div>
             <div class="back">
-                <p class="message-text">You are the most beautiful part of my life. ❤️</p>
-                <div class="underline-name">from your toothache lang-lang</div>
+                <p class="message-text">My life became a beautiful dream the moment I met you. ❤️</p>
             </div>
         </div>
 
         <div class="page" id="p2" style="z-index: 10;">
             <div class="front"><img src="couple1.jpg"></div>
             <div class="back">
-                <p class="message-text">Every second with you is a blessing. ☀️</p>
-                <div class="underline-name">from your toothache lang-lang</div>
+                <p class="message-text">Every smile of yours is a treasure I want to keep forever. ☀️</p>
             </div>
         </div>
 
         <div class="page" id="p3" style="z-index: 9;">
             <div class="front"><img src="couple2.jpg"></div>
             <div class="back">
-                <p class="message-text">In your eyes, I found my home. 🏡</p>
-                <div class="underline-name">from your toothache lang-lang</div>
+                <p class="message-text">In your arms, I have finally found where I belong. 🏡</p>
             </div>
         </div>
 
         <div class="page" id="p4" style="z-index: 8;">
             <div class="front"><img src="couple3.jpg"></div>
             <div class="back">
-                <p class="message-text">Thank you for all the love and smiles. ✨</p>
-                <div class="underline-name">from your toothache lang-lang</div>
+                <p class="message-text">You are the melody that my heart beats to every single day. 🎵</p>
             </div>
         </div>
 
         <div class="page" id="p5" style="z-index: 7;">
             <div class="front"><img src="couple4.jpg"></div>
             <div class="back">
-                <p class="message-text">You're my today and all of my tomorrows. 💜</p>
-                <div class="underline-name">from your toothache lang-lang</div>
+                <p class="message-text">I promise to hold your hand through every high and low. 🤝</p>
             </div>
         </div>
 
         <div class="page" id="p6" style="z-index: 6;">
             <div class="front"><img src="couple5.jpg"></div>
             <div class="back">
-                <p class="message-text">I love you more than words can say. 🌹</p>
-                <div class="underline-name">from your toothache lang-lang</div>
+                <p class="message-text">You're not just my love, you're my best friend for life. 💜</p>
             </div>
         </div>
 
         <div class="page" id="p7" style="z-index: 5;">
             <div class="front"><img src="couple6.jpg"></div>
             <div class="back">
-                <p class="message-text">To more memories and adventures together! 📸</p>
-                <div class="underline-name">from your toothache lang-lang</div>
+                <p class="message-text">Growing old with you is the only plan I ever want to keep. 📸</p>
             </div>
         </div>
 
         <div class="page" id="p8" style="z-index: 4;">
             <div class="front"><img src="couple7.jpg"></div>
             <div class="back">
-                <p class="message-text">My heart belongs to you, always. 🔒</p>
-                <div class="underline-name">from your toothache lang-lang</div>
+                <p class="message-text">No matter where we go, my heart will always follow you. 🔒</p>
             </div>
         </div>
 
         <div class="page" id="p9" style="z-index: 3;">
             <div class="front"><img src="couple8.jpg"></div>
             <div class="back">
-                <p class="message-text">You're my best friend and soulmate. 👩‍❤️‍👨</p>
-                <div class="underline-name">from your toothache lang-lang</div>
+                <p class="message-text">Thank you for loving me even on my "toothache" days! 👩‍❤️‍👨</p>
             </div>
         </div>
 
         <div class="page" id="p10" style="z-index: 2;">
             <div class="front"><img src="couple9.jpg"></div>
             <div class="back">
-                <p class="message-text">Our love story is just beginning. ♾️</p>
-                <div class="underline-name">from your toothache lang-lang</div>
+                <p class="message-text">This book has pages, but our love is truly infinite. ♾️</p>
             </div>
         </div>
 
@@ -231,8 +223,8 @@
             <div class="front"><img src="couple10.jpg"></div>
             <div class="back">
                 <h2 style="color: var(--purple);">Our Movie</h2>
-                <button class="btn" onclick="openVideo()">▶ Watch Our Movie</button>
-                <div class="underline-name">from your toothache lang-lang</div>
+                <button class="btn" onclick="openVideo()">▶ Watch Our Memories</button>
+                <p style="margin-top: 15px; font-weight: bold; color: var(--purple);">Happy Valentine's Day!</p>
             </div>
         </div>
     </div>
@@ -268,7 +260,7 @@
                 this.y = Math.random() * canvas.height - canvas.height;
                 this.size = Math.random() * 15 + 8;
                 this.speed = Math.random() * 2 + 1;
-                this.type = Math.floor(Math.random() * 4); // 0:Heart, 1:Flower, 2:Star, 3:Firework-ish
+                this.type = Math.floor(Math.random() * 4);
                 this.color = `hsl(${Math.random() * 360}, 80%, 60%)`;
                 this.angle = Math.random() * Math.PI * 2;
             }
@@ -276,7 +268,7 @@
             draw() {
                 ctx.fillStyle = this.color;
                 ctx.font = `${this.size}px serif`;
-                let glyph = ['❤️', '🌸', '✨', '🎆'][this.type];
+                let glyph = ['❤️', '🌸', '✨', '🌼'][this.type];
                 ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.angle);
                 ctx.fillText(glyph, 0, 0); ctx.restore();
             }
