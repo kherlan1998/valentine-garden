@@ -7,20 +7,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&display=swap" rel="stylesheet">
     <style>
         :root {
-            --purple: #a01a1a;        /* Deep Crimson */
-            --yellow-green: #d4af37;  /* Soft Gold */
+            --purple-heart: #8e44ad;
+            --red-heart: #e74c3c;
+            --purple-bg: #a01a1a;
+            --gold: #d4af37;
             --book-width: 320px;
-            --book-height: 450px;
+            --book-height: 480px;
             --handwriting: 'Dancing Script', cursive;
         }
 
-        /* Mobile Responsiveness */
         @media (max-width: 400px) {
             :root {
-                --book-width: 280px;
-                --book-height: 400px;
+                --book-width: 300px;
+                --book-height: 440px;
             }
-            .message-text { font-size: 1.1rem !important; }
         }
 
         body {
@@ -36,21 +36,26 @@
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
             z-index: -1; pointer-events: none;
-            filter: blur(1px);
         }
+
+        /* Heart Corner Decorations */
+        .heart-deco { position: absolute; font-size: 1.2rem; z-index: 10; filter: drop-shadow(0 0 5px rgba(0,0,0,0.2)); }
+        .h-tl { top: 10px; left: 10px; color: var(--red-heart); }
+        .h-tr { top: 10px; right: 10px; color: var(--purple-heart); }
+        .h-bl { bottom: 10px; left: 10px; color: var(--purple-heart); }
+        .h-br { bottom: 10px; right: 10px; color: var(--red-heart); }
 
         #heart-container {
             position: absolute;
             width: 180px; height: 180px;
-            background: linear-gradient(45deg, var(--purple), #6b0f0f);
+            background: linear-gradient(45deg, var(--purple-bg), #6b0f0f);
             clip-path: path('M110 200s-100-58-100-132c0-44 32-74 66-74 22 0 34 14 34 14s12-14 34-14c34 0 66 30 66 74 0 74-100 132-100 132z');
             display: flex; justify-content: center; align-items: center;
-            z-index: 2000; cursor: pointer; transition: all 1s ease;
-            box-shadow: 0 0 50px rgba(160, 26, 26, 0.6);
+            z-index: 2000; cursor: pointer; transition: 1s ease;
         }
 
         #heart-button {
-            width: 50px; height: 50px; background: var(--yellow-green);
+            width: 50px; height: 50px; background: var(--gold);
             clip-path: path('M30 55s-28-16-28-36c0-12 9-21 19-21 6 0 9 4 9 4s3-4 9-4c10 0 19 9 19 21 0 20-28 36-28 36z');
             animation: pulse 1.5s infinite;
         }
@@ -68,7 +73,6 @@
         .page {
             position: absolute;
             width: 100%; height: 100%;
-            top: 0; left: 0;
             background: #fffcf5;
             transform-origin: left;
             transform-style: preserve-3d;
@@ -82,43 +86,35 @@
             backface-visibility: hidden;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            padding: 25px; box-sizing: border-box;
-            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 35px 25px; box-sizing: border-box;
+            border: 1px solid rgba(212, 175, 55, 0.2);
         }
-
-        .decoration-tl, .decoration-tr, .decoration-bl, .decoration-br { 
-            position: absolute; font-size: 1.2rem; filter: drop-shadow(0 0 3px gold);
-        }
-        .decoration-tl { top: 10px; left: 10px; }
-        .decoration-tr { top: 10px; right: 10px; }
-        .decoration-bl { bottom: 10px; left: 10px; }
-        .decoration-br { bottom: 10px; right: 10px; }
 
         .front { border-radius: 0 15px 15px 0; z-index: 2; }
-        .back { transform: rotateY(180deg); background: #fdfaf0; border-radius: 15px 0 0 15px; z-index: 1; }
+        .back { transform: rotateY(180deg); background: #fdfaf0; border-radius: 15px 0 0 15px; }
 
+        /* IMAGE FIX: object-fit contain prevents cropping */
         .page img {
-            width: 100%; height: 65%;
-            object-fit: cover; border-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            border: 4px solid white;
-            outline: 1px solid var(--yellow-green);
+            width: 100%;
+            height: 60%;
+            object-fit: contain; 
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 2px solid #eee;
         }
 
         .message-text {
             font-family: var(--handwriting);
-            font-size: 1.25rem; color: #3d0000;
-            text-align: center; line-height: 1.3;
-            margin-top: 15px;
+            font-size: 1.2rem; color: #3d0000;
+            text-align: center; margin-top: 15px;
         }
 
         .cover-front {
             background: linear-gradient(135deg, #a01a1a, #6b0f0f) !important;
-            color: var(--yellow-green) !important;
-            border: 8px double var(--yellow-green) !important;
+            color: var(--gold) !important;
+            border: 8px double var(--gold) !important;
         }
-
-        .cover-front h1 { font-family: 'Great Vibes', cursive; font-size: 2.2rem; margin: 0; }
 
         .controls {
             position: fixed; bottom: 20px;
@@ -126,9 +122,9 @@
         }
 
         .btn {
-            padding: 8px 16px; background: #111; color: var(--yellow-green);
-            border: 1px solid var(--yellow-green); border-radius: 4px;
-            cursor: pointer; font-size: 0.75rem; text-transform: uppercase;
+            padding: 8px 16px; background: #111; color: var(--gold);
+            border: 1px solid var(--gold); border-radius: 4px;
+            cursor: pointer; font-size: 0.75rem;
         }
 
         .flipped { transform: rotateY(-180deg); }
@@ -151,67 +147,115 @@
     <div class="book" id="myBook">
         <div class="page" id="p1" style="z-index: 12;">
             <div class="front cover-front">
-                <span class="decoration-tr">⚜️</span>
                 <h1>Our Story</h1>
                 <h2 style="color: white; font-family: var(--handwriting);">For My Langging</h2>
-                <div style="font-size: 3.5rem; margin: 15px;">🌹</div>
-                <p style="font-size: 0.7rem; letter-spacing: 2px;">CLICK NEXT</p>
-                <div style="font-family: var(--handwriting); color:var(--yellow-green);">from your toothache lang2x</div>
+                <div style="font-size: 3rem; margin: 15px;">🌹</div>
+                <div style="font-family: var(--handwriting); color:var(--gold);">from your toothache lang2x</div>
             </div>
             <div class="back">
-                <span class="decoration-tl">🍷</span>
+                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
+                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
                 <p class="message-text">My life truly began the moment our paths crossed. Every day feels like a fairytale. ❤️</p>
             </div>
         </div>
 
         <div class="page" id="p2" style="z-index: 11;">
-            <div class="front"><img src="couple1.jpg"></div>
-            <div class="back"><p class="message-text">Your smile is the only light I need. ☀️</p></div>
+            <div class="front">
+                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
+                <img src="couple1.jpg">
+                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
+            </div>
+            <div class="back"><p class="message-text">Your smile is my favorite view. ☀️</p></div>
         </div>
+
         <div class="page" id="p3" style="z-index: 10;">
-            <div class="front"><img src="couple2.jpg"></div>
-            <div class="back"><p class="message-text">In your arms, I found my home. 🏡</p></div>
+            <div class="front">
+                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
+                <img src="couple2.jpg">
+                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
+            </div>
+            <div class="back"><p class="message-text">In your arms, everything is perfect. 🏡</p></div>
         </div>
+
         <div class="page" id="p4" style="z-index: 9;">
-            <div class="front"><img src="couple3.jpg"></div>
-            <div class="back"><p class="message-text">Every laugh with you is a treasure. 🎵</p></div>
+            <div class="front">
+                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
+                <img src="couple3.jpg">
+                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
+            </div>
+            <div class="back"><p class="message-text">You are my best friend and my love. 🎵</p></div>
         </div>
+
         <div class="page" id="p5" style="z-index: 8;">
-            <div class="front"><img src="couple4.jpg"></div>
-            <div class="back"><p class="message-text">I promise to hold your hand forever. 🤝</p></div>
+            <div class="front">
+                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
+                <img src="couple4.jpg">
+                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
+            </div>
+            <div class="back"><p class="message-text">I love you more than words can say. 🤝</p></div>
         </div>
+
         <div class="page" id="p6" style="z-index: 7;">
-            <div class="front"><img src="couple5.jpg"></div>
-            <div class="back"><p class="message-text">You make simple moments extraordinary. 💜</p></div>
+            <div class="front">
+                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
+                <img src="couple5.jpg">
+                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
+            </div>
+            <div class="back"><p class="message-text">Every moment with you is a gift. 💜</p></div>
         </div>
+
         <div class="page" id="p7" style="z-index: 6;">
-            <div class="front"><img src="couple6.jpg"></div>
-            <div class="back"><p class="message-text">I can't wait for our future adventures. 📸</p></div>
+            <div class="front">
+                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
+                <img src="couple6.jpg">
+                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
+            </div>
+            <div class="back"><p class="message-text">My favorite place is being with you. 📸</p></div>
         </div>
+
         <div class="page" id="p8" style="z-index: 5;">
-            <div class="front"><img src="couple7.jpg"></div>
-            <div class="back"><p class="message-text">My heart belongs only to you. 🔒</p></div>
+            <div class="front">
+                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
+                <img src="couple7.jpg">
+                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
+            </div>
+            <div class="back"><p class="message-text">You have my whole heart, always. 🔒</p></div>
         </div>
+
         <div class="page" id="p9" style="z-index: 4;">
-            <div class="front"><img src="couple8.jpg"></div>
-            <div class="back"><p class="message-text">Thanks for dealing with my moods! 👩‍❤️‍👨</p></div>
+            <div class="front">
+                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
+                <img src="couple8.jpg">
+                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
+            </div>
+            <div class="back"><p class="message-text">Forever isn't long enough with you. 👩‍❤️‍👨</p></div>
         </div>
+
         <div class="page" id="p10" style="z-index: 3;">
-            <div class="front"><img src="couple9.jpg"></div>
-            <div class="back"><p class="message-text">You are my everything, Langging. ♾️</p></div>
+            <div class="front">
+                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
+                <img src="couple9.jpg">
+                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
+            </div>
+            <div class="back"><p class="message-text">You are my greatest blessing. ♾️</p></div>
         </div>
 
         <div class="page" id="p11" style="z-index: 2;">
-            <div class="front"><img src="couple10.jpg"></div>
-            <div class="back"><p class="message-text">To many more years of us. 🥂</p></div>
+            <div class="front">
+                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
+                <img src="couple10.jpg">
+                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
+            </div>
+            <div class="back"><p class="message-text">To the moon and back. 🥂</p></div>
         </div>
 
         <div class="page" id="p12" style="z-index: 1;">
             <div class="front">
-                <span class="decoration-tr">🏰</span>
-                <h2 style="color: var(--purple); font-family: 'Great Vibes', cursive; font-size: 2.2rem;">Our Memories</h2>
+                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
+                <h2 style="color: var(--purple-bg); font-family: 'Great Vibes', cursive; font-size: 2rem;">Our Memories</h2>
                 <button class="btn" onclick="openVideo()">▶ Watch Video</button>
-                <p style="margin-top: 15px; font-family: var(--handwriting); color: var(--purple); font-size: 1.2rem;">Happy Valentine's Day!</p>
+                <p style="margin-top: 15px; font-family: var(--handwriting); color: var(--purple-bg); font-size: 1.2rem;">Happy Valentine's Day!</p>
+                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
             </div>
             <div class="back"></div>
         </div>
@@ -219,7 +263,7 @@
 
     <div class="controls" id="controls">
         <button class="btn" onclick="prevPage()">Back</button>
-        <button class="btn" onclick="nextPage()">Open</button>
+        <button class="btn" onclick="nextPage()">Next</button>
         <button class="btn" id="autoBtn" onclick="toggleAuto()">Auto</button>
     </div>
 
@@ -231,7 +275,7 @@
     <audio id="bgMusic" src="valentine.mp3" loop></audio>
 
     <script>
-        let curr = 1; const total = 12; // Updated to 12 pages
+        let curr = 1; const total = 12;
         let auto = false; let interval;
 
         const canvas = document.getElementById('bgCanvas');
@@ -248,18 +292,17 @@
                 this.y = Math.random() * canvas.height + 100;
                 this.size = Math.random() * 8 + 4;
                 this.speed = Math.random() * 1 + 0.5;
-                this.type = Math.floor(Math.random() * 4);
-                this.color = Math.random() > 0.5 ? '#d4af37' : '#a01a1a';
+                this.type = Math.floor(Math.random() * 2);
+                this.color = this.type === 0 ? '#e74c3c' : '#8e44ad';
                 this.angle = Math.random() * Math.PI * 2;
             }
             update() { this.y -= this.speed; if (this.y < -50) this.reset(); }
             draw() {
-                ctx.save(); ctx.globalAlpha = 0.4;
+                ctx.save(); ctx.globalAlpha = 0.3;
                 ctx.fillStyle = this.color;
                 ctx.font = `${this.size}px serif`;
-                let glyph = ['❤️', '🌹', '✨', '⚜️'][this.type];
                 ctx.translate(this.x, this.y); ctx.rotate(this.angle);
-                ctx.fillText(glyph, 0, 0); ctx.restore();
+                ctx.fillText('❤️', 0, 0); ctx.restore();
             }
         }
 
