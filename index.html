@@ -14,14 +14,21 @@
 
         body {
             margin: 0; padding: 0;
-            background-color: #0b0b0b;
+            background-color: #050505;
             display: flex; justify-content: center; align-items: center;
             height: 100vh; overflow: hidden;
             font-family: 'Georgia', serif;
-            perspective: 1500px;
+            perspective: 2000px;
         }
 
-        /* Heart Start Screen - The only thing visible at start */
+        /* Magical Background Canvas */
+        #bgCanvas {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1; pointer-events: none;
+        }
+
+        /* Heart Start Screen */
         #heart-container {
             position: absolute;
             width: 220px; height: 220px;
@@ -29,7 +36,7 @@
             clip-path: path('M110 200s-100-58-100-132c0-44 32-74 66-74 22 0 34 14 34 14s12-14 34-14c34 0 66 30 66 74 0 74-100 132-100 132z');
             display: flex; justify-content: center; align-items: center;
             z-index: 2000; cursor: pointer; transition: all 1s ease-in-out;
-            box-shadow: 0 0 30px rgba(142, 68, 173, 0.6);
+            box-shadow: 0 0 50px rgba(154, 205, 50, 0.5);
         }
 
         #heart-button {
@@ -40,13 +47,12 @@
 
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
 
-        /* Book Structure - Initially hidden */
+        /* Book Structure */
         .book {
             position: relative;
             width: var(--book-width); height: var(--book-height);
             transform-style: preserve-3d;
-            display: none; /* Stay hidden until click */
-            opacity: 0;
+            display: none; opacity: 0;
             transition: opacity 1s;
         }
 
@@ -58,7 +64,7 @@
             transform-origin: left;
             transform-style: preserve-3d;
             transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-            box-shadow: inset 3px 0px 20px rgba(0,0,0,0.1);
+            box-shadow: inset 3px 0px 20px rgba(0,0,0,0.2);
         }
 
         .front, .back {
@@ -68,57 +74,62 @@
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             padding: 25px; box-sizing: border-box;
-            border: 1px solid #ddd; border-radius: 0 10px 10px 0;
+            border: 1px solid #ddd;
         }
 
-        /* Back of page (the left side when flipped) */
-        .back { transform: rotateY(180deg); background: #f9f9f9; border-radius: 10px 0 0 10px; }
+        .front { border-radius: 0 15px 15px 0; z-index: 2; }
+        .back { 
+            transform: rotateY(180deg); 
+            background: #fffcf0; 
+            border-radius: 15px 0 0 15px; 
+            z-index: 1;
+        }
 
         .page img {
-            width: 100%; height: 75%;
-            object-fit: cover; border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            width: 100%; height: 80%;
+            object-fit: cover; border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            border: 4px solid white;
         }
 
-        .message {
-            margin-top: 15px; text-align: center;
-            font-size: 0.95rem; color: var(--purple); font-weight: bold;
-            line-height: 1.4;
+        .message-text {
+            font-size: 1.1rem; color: #4a148c;
+            text-align: center; font-style: italic;
+            line-height: 1.6; padding: 10px;
         }
 
-        /* The Cover Design */
         .cover-front {
-            background: linear-gradient(135deg, var(--purple), #4a148c) !important;
+            background: linear-gradient(135deg, #6a1b9a, #4a148c) !important;
             color: white !important;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        /* Control Buttons */
+        /* Buttons */
         .controls {
             position: fixed; bottom: 30px;
-            display: none; gap: 12px; z-index: 1100;
+            display: none; gap: 15px; z-index: 1100;
         }
 
         .btn {
-            padding: 12px 20px; background: var(--purple); color: white;
+            padding: 12px 24px; background: var(--purple); color: white;
             border: 2px solid var(--yellow-green); border-radius: 30px;
-            cursor: pointer; font-size: 0.85rem; font-weight: bold; transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer; font-size: 0.9rem; font-weight: bold; transition: 0.3s;
         }
 
-        .btn:hover { background: var(--yellow-green); color: black; transform: translateY(-3px); }
+        .btn:hover { background: var(--yellow-green); color: black; transform: scale(1.1); }
 
         .flipped { transform: rotateY(-180deg); }
 
-        /* Falling Decorations */
-        .falling {
-            position: absolute; top: -50px; z-index: 1;
-            animation: fall linear forwards; pointer-events: none;
+        /* Video */
+        #video-overlay {
+            display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+            background:rgba(0,0,0,0.95); z-index:3000; 
+            justify-content:center; align-items:center; flex-direction:column;
         }
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
     </style>
 </head>
 <body>
+
+    <canvas id="bgCanvas"></canvas>
 
     <div id="heart-container" onclick="openBook()">
         <div id="heart-button"></div>
@@ -127,30 +138,65 @@
     <div class="book" id="myBook">
         <div class="page" id="p1" style="z-index: 11;">
             <div class="front cover-front">
-                <h1 style="font-size: 1.8rem;">Happy Valentine's Day</h1>
-                <h2 style="color: var(--yellow-green); font-size: 2rem;">Langging</h2>
-                <hr style="width: 50%; border: 1px solid var(--yellow-green); margin: 20px 0;">
-                <p>Every page is a memory of us.</p>
-                <p style="font-size: 0.7rem; margin-top: 30px; opacity: 0.8;">Click "Next Page" to open</p>
+                <h1 style="font-size: 2rem; margin: 0;">Greeting Surprise!</h1>
+                <h2 style="color: var(--yellow-green); margin-top: 10px;">For My Langging</h2>
+                <div style="font-size: 4rem; margin: 20px;">🎁</div>
+                <p>Click "Next" to unlock my heart...</p>
             </div>
-            <div class="back"><img src="couple1.jpg"><p class="message">You are the best thing that ever happened to me.</p></div>
+            <div class="back"><p class="message-text">Our journey together is my favorite story. ❤️</p></div>
         </div>
 
-        <div class="page" id="p2" style="z-index: 10;"><div class="front"><img src="couple2.jpg"><p class="message">I love the way you make me smile.</p></div><div class="back"><img src="couple3.jpg"></div></div>
-        <div class="page" id="p3" style="z-index: 9;"><div class="front"><img src="couple3.jpg"><p class="message">In your eyes, I found my home.</p></div><div class="back"><img src="couple4.jpg"></div></div>
-        <div class="page" id="p4" style="z-index: 8;"><div class="front"><img src="couple4.jpg"><p class="message">To many more adventures together!</p></div><div class="back"><img src="couple5.jpg"></div></div>
-        <div class="page" id="p5" style="z-index: 7;"><div class="front"><img src="couple5.jpg"><p class="message">You are my soulmate and my best friend.</p></div><div class="back"><img src="couple6.jpg"></div></div>
-        <div class="page" id="p6" style="z-index: 6;"><div class="front"><img src="couple6.jpg"><p class="message">My heart is always with you.</p></div><div class="back"><img src="couple7.jpg"></div></div>
-        <div class="page" id="p7" style="z-index: 5;"><div class="front"><img src="couple7.jpg"><p class="message">Every second with you is a blessing.</p></div><div class="back"><img src="couple8.jpg"></div></div>
-        <div class="page" id="p8" style="z-index: 4;"><div class="front"><img src="couple8.jpg"><p class="message">Thank you for all the love, Langging.</p></div><div class="back"><img src="couple9.jpg"></div></div>
-        <div class="page" id="p9" style="z-index: 3;"><div class="front"><img src="couple9.jpg"><p class="message">I love you more than words can express.</p></div><div class="back"><img src="couple10.jpg"></div></div>
-        
+        <div class="page" id="p2" style="z-index: 10;">
+            <div class="front"><img src="couple1.jpg"></div>
+            <div class="back"><p class="message-text">Every smile you give me is like a ray of sunshine. ☀️</p></div>
+        </div>
+
+        <div class="page" id="p3" style="z-index: 9;">
+            <div class="front"><img src="couple2.jpg"></div>
+            <div class="back"><p class="message-text">In your arms, I have found my safe haven. 🏡</p></div>
+        </div>
+
+        <div class="page" id="p4" style="z-index: 8;">
+            <div class="front"><img src="couple3.jpg"></div>
+            <div class="back"><p class="message-text">Thank you for being the person you are, Langging. ✨</p></div>
+        </div>
+
+        <div class="page" id="p5" style="z-index: 7;">
+            <div class="front"><img src="couple4.jpg"></div>
+            <div class="back"><p class="message-text">I love you more than words can ever describe. 💜</p></div>
+        </div>
+
+        <div class="page" id="p6" style="z-index: 6;">
+            <div class="front"><img src="couple5.jpg"></div>
+            <div class="back"><p class="message-text">You are my today and all of my tomorrows. 🌹</p></div>
+        </div>
+
+        <div class="page" id="p7" style="z-index: 5;">
+            <div class="front"><img src="couple6.jpg"></div>
+            <div class="back"><p class="message-text">I never want to stop making memories with you. 📸</p></div>
+        </div>
+
+        <div class="page" id="p8" style="z-index: 4;">
+            <div class="front"><img src="couple7.jpg"></div>
+            <div class="back"><p class="message-text">My heart belongs to you, always and forever. 🔒</p></div>
+        </div>
+
+        <div class="page" id="p9" style="z-index: 3;">
+            <div class="front"><img src="couple8.jpg"></div>
+            <div class="back"><p class="message-text">You're my best friend and my soulmate. 👩‍❤️‍👨</p></div>
+        </div>
+
         <div class="page" id="p10" style="z-index: 2;">
-            <div class="front"><img src="couple10.jpg"><p class="message">Forever and always, yours.</p></div>
+            <div class="front"><img src="couple9.jpg"></div>
+            <div class="back"><p class="message-text">Last page of the book, but never the last of us. ♾️</p></div>
+        </div>
+
+        <div class="page" id="p11" style="z-index: 1;">
+            <div class="front"><img src="couple10.jpg"></div>
             <div class="back">
-                <h2 style="color: var(--purple);">Our Love Story</h2>
-                <p style="text-align: center;">Click below to see our special video.</p>
-                <button class="btn" onclick="openVideo()">Watch Our Movie</button>
+                <h2 style="color: var(--purple);">Our Movie</h2>
+                <button class="btn" onclick="openVideo()">▶ Play Memories</button>
+                <p style="margin-top: 20px; font-weight: bold;">Happy Valentine's Day!</p>
             </div>
         </div>
     </div>
@@ -161,7 +207,7 @@
         <button class="btn" id="autoBtn" onclick="toggleAuto()">Auto Play</button>
     </div>
 
-    <div id="video-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:3000; justify-content:center; align-items:center; flex-direction:column;">
+    <div id="video-overlay">
         <video id="myVideo" width="320" controls><source src="memories.mp4" type="video/mp4"></video>
         <button class="btn" style="margin-top:20px;" onclick="closeVideo()">Close</button>
     </div>
@@ -169,30 +215,74 @@
     <audio id="bgMusic" src="valentine.mp3" loop></audio>
 
     <script>
-        let curr = 1; const total = 10;
+        let curr = 1; const total = 11;
         let auto = false; let interval;
 
+        // Background Animation Logic
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.onresize = resize;
+        resize();
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height - canvas.height;
+                this.size = Math.random() * 15 + 5;
+                this.speed = Math.random() * 2 + 1;
+                this.type = Math.floor(Math.random() * 3); // 0: Heart, 1: Flower, 2: Star
+                this.color = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                this.angle = Math.random() * Math.PI * 2;
+            }
+            update() {
+                this.y += this.speed;
+                this.angle += 0.02;
+                if (this.y > canvas.height) this.reset();
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.font = `${this.size}px serif`;
+                let glyph = ['❤️', '🌸', '✨'][this.type];
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.fillText(glyph, 0, 0);
+                ctx.restore();
+            }
+        }
+
+        for(let i=0; i<60; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
         function openBook() {
-            // Play music
-            document.getElementById('bgMusic').play().catch(e => console.log("Audio needs user click"));
-            
-            // Hide heart with animation
+            document.getElementById('bgMusic').play().catch(() => {});
             const heart = document.getElementById('heart-container');
-            heart.style.transform = 'scale(0) rotate(360deg)';
+            heart.style.transform = 'scale(0) rotate(720deg)';
             heart.style.opacity = '0';
 
             setTimeout(() => {
                 heart.style.display = 'none';
                 const book = document.getElementById('myBook');
                 book.style.display = 'block';
-                // Trigger fade in
                 setTimeout(() => {
                     book.style.opacity = '1';
                     document.getElementById('controls').style.display = 'flex';
                 }, 50);
-                
-                // Start falling hearts/flowers
-                setInterval(createFalling, 400);
             }, 800);
         }
 
@@ -214,28 +304,15 @@
             auto = !auto;
             const btn = document.getElementById('autoBtn');
             if(auto) {
-                btn.style.background = "var(--yellow-green)"; btn.style.color = "black"; btn.innerText = "Auto: ON";
+                btn.style.background = "var(--yellow-green)"; btn.innerText = "Auto: ON";
                 interval = setInterval(() => {
                     if(curr < total) nextPage();
-                    else { clearInterval(interval); auto = false; btn.style.background = "var(--purple)"; btn.style.color = "white"; btn.innerText = "Auto Play"; }
+                    else { clearInterval(interval); auto = false; btn.innerText = "Auto Play"; }
                 }, 3500);
             } else {
                 clearInterval(interval);
-                btn.style.background = "var(--purple)"; btn.style.color = "white"; btn.innerText = "Auto Play";
+                btn.innerText = "Auto Play";
             }
-        }
-
-        function createFalling() {
-            const items = ['🌸', '💜', '🍃', '❤️', '✨'];
-            const el = document.createElement('div');
-            el.className = 'falling';
-            el.innerHTML = items[Math.floor(Math.random()*items.length)];
-            el.style.left = Math.random()*100 + 'vw';
-            el.style.fontSize = Math.random()*20+15+'px';
-            el.style.animationDuration = Math.random()*3+2+'s';
-            el.style.opacity = Math.random();
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 5000);
         }
 
         function openVideo() {
