@@ -34,11 +34,10 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0 0 50px rgba(142, 68, 173, 0.5);
-            transition: all 0.8s ease;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 10;
         }
 
-        /* The Small Heart Button */
         #heart-button {
             width: 80px;
             height: 80px;
@@ -56,37 +55,34 @@
             100% { transform: scale(1); }
         }
 
-        /* Main Image Display */
+        /* Main Image Display - Realistic & Polished */
         #main-photo {
             position: absolute;
-            max-width: 80%;
+            max-width: 85%;
             max-height: 70%;
-            border: 5px solid var(--purple);
-            border-radius: 15px;
+            border: 4px solid white;
+            border-radius: 4px;
             opacity: 0;
-            transform: scale(0.5);
-            transition: all 2s ease;
+            transform: scale(0.8) translateY(20px);
+            transition: all 1.5s ease-out;
             z-index: 5;
-            box-shadow: 0 0 30px var(--purple);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            object-fit: cover;
         }
 
-        /* Falling Elements Styling */
         .falling {
             position: absolute;
             top: -50px;
             font-size: 25px;
             user-select: none;
-            z-index: 1;
+            z-index: 2;
             animation: fall linear forwards;
         }
 
         @keyframes fall {
-            to {
-                transform: translateY(110vh) rotate(360deg);
-            }
+            to { transform: translateY(110vh) rotate(360deg); }
         }
 
-        /* Fireworks Container */
         #fireworks-canvas {
             position: fixed;
             top: 0;
@@ -94,35 +90,35 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 15;
+            z-index: 1; /* Keep fireworks behind photo and buttons */
         }
 
-        /* Navigation Buttons */
         .btn-group {
             position: fixed;
-            bottom: 30px;
+            bottom: 40px;
             display: none;
-            gap: 20px;
+            gap: 15px;
             z-index: 100;
         }
 
         .custom-btn {
-            padding: 15px 30px;
-            background: var(--purple);
+            padding: 12px 25px;
+            background: rgba(142, 68, 173, 0.8);
             color: white;
             border: 2px solid var(--yellow-green);
-            border-radius: 25px;
+            border-radius: 30px;
             cursor: pointer;
-            font-size: 1.1rem;
+            font-weight: bold;
+            backdrop-filter: blur(5px);
             transition: 0.3s;
         }
 
         .custom-btn:hover {
             background: var(--yellow-green);
             color: black;
+            transform: translateY(-3px);
         }
 
-        /* Video Modal */
         #video-overlay {
             display: none;
             position: fixed;
@@ -130,7 +126,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.98);
+            background: #000;
             z-index: 200;
             justify-content: center;
             align-items: center;
@@ -138,9 +134,10 @@
         }
 
         video {
-            max-width: 90%;
-            max-height: 80%;
-            border: 3px solid var(--yellow-green);
+            width: 90%;
+            max-width: 400px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px var(--purple);
         }
     </style>
 </head>
@@ -155,7 +152,7 @@
     <img id="main-photo" src="couple.jpg" alt="Our Memory">
 
     <div class="btn-group" id="controls">
-        <button class="custom-btn" onclick="location.reload()">Back to Start</button>
+        <button class="custom-btn" onclick="location.reload()">Reset</button>
         <button class="custom-btn" onclick="openVideo()">Our Memories</button>
     </div>
 
@@ -163,45 +160,43 @@
         <video id="myVideo" controls>
             <source src="memories.mp4" type="video/mp4">
         </video>
-        <button class="custom-btn" style="margin-top: 20px;" onclick="closeVideo()">Close Video</button>
+        <button class="custom-btn" style="margin-top: 25px;" onclick="closeVideo()">Close</button>
     </div>
 
-    <audio id="bgMusic" src="valentine.mp3"></audio>
+    <audio id="bgMusic" src="valentine.mp3" loop></audio>
 
     <script>
         function bloom() {
-            document.getElementById('bgMusic').play();
+            const music = document.getElementById('bgMusic');
+            music.play().catch(e => console.log("Audio needs user interaction first"));
             
-            // 1. Shrink the heart and show the photo
-            document.getElementById('heart-container').style.transform = 'scale(0)';
+            document.getElementById('heart-container').style.transform = 'scale(0) rotate(180deg)';
+            document.getElementById('heart-container').style.opacity = '0';
+            
             const photo = document.getElementById('main-photo');
             photo.style.opacity = '1';
-            photo.style.transform = 'scale(1)';
+            photo.style.transform = 'scale(1) translateY(0)';
 
-            // 2. Start Falling Animations
-            setInterval(createFallingElement, 300);
-
-            // 3. Trigger Fireworks
+            setInterval(createFallingElement, 400);
             startFireworks();
 
-            // 4. Show buttons
             setTimeout(() => {
                 document.getElementById('controls').style.display = 'flex';
-            }, 2000);
+            }, 2500);
         }
 
         function createFallingElement() {
-            const elements = ['🌸', '💜', '✨', '🍃', '❤️'];
+            const items = ['🌸', '💜', '🍃', '✨', '❤️', '🌼'];
             const el = document.createElement('div');
             el.className = 'falling';
-            el.innerHTML = elements[Math.floor(Math.random() * elements.length)];
+            el.innerHTML = items[Math.floor(Math.random() * items.length)];
             el.style.left = Math.random() * 100 + 'vw';
-            el.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            el.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            el.style.opacity = Math.random();
             document.body.appendChild(el);
             setTimeout(() => el.remove(), 5000);
         }
 
-        // Simple Fireworks Logic
         function startFireworks() {
             const canvas = document.getElementById('fireworks-canvas');
             const ctx = canvas.getContext('2d');
@@ -209,30 +204,40 @@
             canvas.height = window.innerHeight;
 
             const particles = [];
-            function Particle(x, y) {
-                this.x = x; this.y = y;
-                this.radius = Math.random() * 3 + 1;
-                this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
-                this.velocity = { x: Math.random() * 6 - 3, y: Math.random() * 6 - 3 };
-                this.life = 100;
+            class Particle {
+                constructor(x, y) {
+                    this.x = x; this.y = y;
+                    this.radius = Math.random() * 2 + 1;
+                    this.color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+                    this.velocity = { x: Math.random() * 4 - 2, y: Math.random() * 4 - 2 };
+                    this.life = 100;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.globalAlpha = this.life / 100;
+                    ctx.fill();
+                }
+                update() {
+                    this.x += this.velocity.x; this.y += this.velocity.y;
+                    this.life -= 0.8;
+                }
             }
 
-            Particle.prototype.draw = function() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-            };
-
             function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                if(particles.length < 100) {
-                    for(let i=0; i<5; i++) particles.push(new Particle(Math.random()*canvas.width, Math.random()*canvas.height));
+                ctx.fillStyle = 'rgba(11, 11, 11, 0.2)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                if (Math.random() < 0.05) {
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height / 2;
+                    for(let i=0; i<30; i++) particles.push(new Particle(x, y));
                 }
+
                 particles.forEach((p, i) => {
-                    p.x += p.velocity.x; p.y += p.velocity.y;
-                    p.life--; p.draw();
-                    if(p.life <= 0) particles.splice(i, 1);
+                    if (p.life <= 0) particles.splice(i, 1);
+                    else { p.update(); p.draw(); }
                 });
                 requestAnimationFrame(animate);
             }
