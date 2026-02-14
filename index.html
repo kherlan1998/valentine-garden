@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For My Langging</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&display=swap" rel="stylesheet">
     <style>
-       :root {
-    --purple: #a01a1a;        /* Changed to Deep Crimson */
-    --yellow-green: #d4af37;  /* Changed to Soft Gold */
-    --book-width: 320px;
-    --book-height: 450px;
-}
+        :root {
+            --purple: #a01a1a;        /* Deep Crimson */
+            --yellow-green: #d4af37;  /* Soft Gold */
+            --book-width: 320px;
+            --book-height: 450px;
+            --handwriting: 'Dancing Script', cursive;
+        }
 
         body {
             margin: 0; padding: 0;
-            background-color: #050505;
+            background-color: #0a0a0a;
             display: flex; justify-content: center; align-items: center;
             height: 100vh; overflow: hidden;
             font-family: 'Georgia', serif;
@@ -25,21 +27,22 @@
             position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
             z-index: -1; pointer-events: none;
+            filter: blur(1px); /* Softens background elements */
         }
 
         /* Heart Start Screen */
         #heart-container {
             position: absolute;
             width: 220px; height: 220px;
-            background: linear-gradient(45deg, var(--purple), var(--yellow-green));
+            background: linear-gradient(45deg, var(--purple), #6b0f0f);
             clip-path: path('M110 200s-100-58-100-132c0-44 32-74 66-74 22 0 34 14 34 14s12-14 34-14c34 0 66 30 66 74 0 74-100 132-100 132z');
             display: flex; justify-content: center; align-items: center;
-            z-index: 2000; cursor: pointer; transition: all 1s ease-in-out;
-            box-shadow: 0 0 50px rgba(154, 205, 50, 0.5);
+            z-index: 2000; cursor: pointer; transition: all 1s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            box-shadow: 0 0 50px rgba(160, 26, 26, 0.6);
         }
 
         #heart-button {
-            width: 60px; height: 60px; background: white;
+            width: 60px; height: 60px; background: var(--yellow-green);
             clip-path: path('M30 55s-28-16-28-36c0-12 9-21 19-21 6 0 9 4 9 4s3-4 9-4c10 0 19 9 19 21 0 20-28 36-28 36z');
             animation: pulse 1.5s infinite;
         }
@@ -59,11 +62,11 @@
             position: absolute;
             width: 100%; height: 100%;
             top: 0; left: 0;
-            background: white;
+            background: #fffcf5;
             transform-origin: left;
             transform-style: preserve-3d;
             transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-            box-shadow: inset 3px 0px 20px rgba(0,0,0,0.2);
+            box-shadow: inset 3px 0px 20px rgba(0,0,0,0.1);
         }
 
         .front, .back {
@@ -73,36 +76,43 @@
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
             padding: 30px; box-sizing: border-box;
-            border: 1px solid #ddd;
+            border: 1px solid rgba(212, 175, 55, 0.3);
         }
 
         /* Decorations */
-        .decoration-tl { position: absolute; top: 10px; left: 10px; font-size: 1.2rem; }
-        .decoration-tr { position: absolute; top: 10px; right: 10px; font-size: 1.2rem; }
-        .decoration-bl { position: absolute; bottom: 10px; left: 10px; font-size: 1.2rem; }
-        .decoration-br { position: absolute; bottom: 10px; right: 10px; font-size: 1.2rem; }
+        .decoration-tl, .decoration-tr, .decoration-bl, .decoration-br { 
+            position: absolute; font-size: 1.5rem; filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.5));
+        }
+        .decoration-tl { top: 15px; left: 15px; }
+        .decoration-tr { top: 15px; right: 15px; }
+        .decoration-bl { bottom: 15px; left: 15px; }
+        .decoration-br { bottom: 15px; right: 15px; }
 
-        .front { border-radius: 0 15px 15px 0; z-index: 2; background: #fff; }
-        .back { transform: rotateY(180deg); background: #fffcf0; border-radius: 15px 0 0 15px; z-index: 1; }
+        .front { border-radius: 0 15px 15px 0; z-index: 2; }
+        .back { transform: rotateY(180deg); background: #fdfaf0; border-radius: 15px 0 0 15px; z-index: 1; }
 
         .page img {
             width: 100%; height: 70%;
-            object-fit: cover; border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            border: 4px solid white;
+            object-fit: cover; border-radius: 5px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            border: 5px solid white;
+            outline: 1px solid var(--yellow-green);
         }
 
         .message-text {
-            font-size: 0.95rem; color: #4a148c;
-            text-align: center; font-style: italic;
-            line-height: 1.5; margin-top: 15px;
-            padding: 0 10px;
+            font-family: var(--handwriting);
+            font-size: 1.3rem; color: #3d0000;
+            text-align: center; line-height: 1.4;
+            margin-top: 20px; padding: 0 5px;
         }
 
         .cover-front {
-            background: linear-gradient(135deg, #6a1b9a, #4a148c) !important;
-            color: white !important;
+            background: linear-gradient(135deg, #a01a1a, #6b0f0f) !important;
+            color: var(--yellow-green) !important;
+            border: 10px double var(--yellow-green) !important;
         }
+
+        .cover-front h1 { font-family: 'Great Vibes', cursive; font-size: 2.5rem; }
 
         .controls {
             position: fixed; bottom: 30px;
@@ -110,17 +120,18 @@
         }
 
         .btn {
-            padding: 12px 24px; background: var(--purple); color: white;
-            border: 2px solid var(--yellow-green); border-radius: 30px;
-            cursor: pointer; font-size: 0.9rem; font-weight: bold; transition: 0.3s;
+            padding: 10px 20px; background: #222; color: var(--yellow-green);
+            border: 1px solid var(--yellow-green); border-radius: 5px;
+            cursor: pointer; font-family: 'Georgia', serif; font-size: 0.8rem;
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
         }
 
-        .btn:hover { background: var(--yellow-green); color: black; transform: scale(1.1); }
+        .btn:hover { background: var(--yellow-green); color: black; box-shadow: 0 0 15px var(--yellow-green); }
         .flipped { transform: rotateY(-180deg); }
 
         #video-overlay {
             display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
-            background:rgba(0,0,0,0.95); z-index:3000; 
+            background:rgba(0,0,0,0.98); z-index:3000; 
             justify-content:center; align-items:center; flex-direction:column;
         }
     </style>
@@ -136,129 +147,63 @@
     <div class="book" id="myBook">
         <div class="page" id="p1" style="z-index: 11;">
             <div class="front cover-front">
-                <span class="decoration-tr">✨</span>
-                <h1 style="font-size: 1.8rem; margin: 0;">Greeting Surprise!</h1>
-                <h2 style="color: var(--yellow-green); margin-top: 10px;">For My Langging</h2>
-                <div style="font-size: 4rem; margin: 20px;">🎁</div>
-                <p>Click "Next" to reveal our story...</p>
-                <div style="margin-top: 15px; font-weight: bold; text-decoration: underline; color:var(--yellow-green);">from your toothache lang2x</div>
-                <span class="decoration-bl">🌸</span>
+                <span class="decoration-tr">⚜️</span>
+                <h1>Greeting Surprise!</h1>
+                <h2 style="color: white; margin-top: 10px; font-family: var(--handwriting);">For My Langging</h2>
+                <div style="font-size: 4rem; margin: 20px; filter: drop-shadow(0 0 10px gold);">🌹</div>
+                <p style="font-size: 0.8rem; letter-spacing: 2px;">OPEN OUR STORY</p>
+                <div style="margin-top: 20px; font-family: var(--handwriting); color:var(--yellow-green); font-size: 1.2rem;">from your toothache lang2x</div>
+                <span class="decoration-bl">⚜️</span>
             </div>
             <div class="back">
-                <span class="decoration-tl">💜</span><span class="decoration-tr">✨</span><span class="decoration-br">🌿</span>
+                <span class="decoration-tl">🍷</span><span class="decoration-tr">✨</span><span class="decoration-br">📜</span>
                 <p class="message-text">My life truly began the moment our paths crossed. Every day with you feels like a page from a fairytale I never want to end. ❤️</p>
-                <span class="decoration-bl">🌷</span>
+                <span class="decoration-bl">🌹</span>
             </div>
         </div>
 
         <div class="page" id="p2" style="z-index: 10;">
             <div class="front">
-                <span class="decoration-tl">🌿</span><img src="couple1.jpg"><span class="decoration-br">🌸</span>
+                <span class="decoration-tl">🌿</span><img src="couple1.jpg"><span class="decoration-br">🍂</span>
             </div>
             <div class="back">
-                <span class="decoration-tr">🌸</span><span class="decoration-tl">⭐</span><span class="decoration-bl">🍀</span>
-                <p class="message-text">Your smile is the only light I need to find my way. Thank you for being the calm in my storm and the joy in my heart. ☀️</p>
+                <span class="decoration-tr">🌸</span><span class="decoration-tl">🌟</span><span class="decoration-bl">⚜️</span>
+                <p class="message-text">Your smile is the only light I need. Thank you for being the calm in my storm and the joy in my heart. ☀️</p>
                 <span class="decoration-br">🦋</span>
             </div>
         </div>
 
         <div class="page" id="p3" style="z-index: 9;">
             <div class="front">
-                <span class="decoration-tr">✨</span><img src="couple2.jpg"><span class="decoration-bl">🌿</span>
+                <span class="decoration-tr">✨</span><img src="couple2.jpg"><span class="decoration-bl">🍃</span>
             </div>
             <div class="back">
-                <span class="decoration-tl">🦋</span><span class="decoration-tr">🍃</span><span class="decoration-br">🌷</span>
-                <p class="message-text">In your arms, I’ve found a home that no map could ever show. You are my safe place and my greatest adventure combined. 🏡</p>
+                <span class="decoration-tl">🕊️</span><span class="decoration-tr">🕯️</span><span class="decoration-br">🌷</span>
+                <p class="message-text">In your arms, I’ve found a home that no map could ever show. You are my safe place. 🏡</p>
                 <span class="decoration-bl">✨</span>
             </div>
         </div>
 
         <div class="page" id="p4" style="z-index: 8;">
             <div class="front">
-                <span class="decoration-tl">🌸</span><img src="couple3.jpg"><span class="decoration-br">✨</span>
+                <span class="decoration-tl">🎀</span><img src="couple3.jpg"><span class="decoration-br">✨</span>
             </div>
             <div class="back">
-                <span class="decoration-tr">🌿</span><span class="decoration-tl">💜</span><span class="decoration-bl">🎵</span>
-                <p class="message-text">Every laugh we share is a treasure I store deep in my soul. I love how we can be our weirdest selves together and still be happy. 🎵</p>
+                <span class="decoration-tr">🎻</span><span class="decoration-tl">❤️</span><span class="decoration-bl">🎵</span>
+                <p class="message-text">I love how we can be our weirdest selves together and still be happy. 🎵</p>
                 <span class="decoration-br">✨</span>
-            </div>
-        </div>
-
-        <div class="page" id="p5" style="z-index: 7;">
-            <div class="front">
-                <span class="decoration-tr">🌿</span><img src="couple4.jpg"><span class="decoration-bl">🌸</span>
-            </div>
-            <div class="back">
-                <span class="decoration-tl">✨</span><span class="decoration-tr">🦋</span><span class="decoration-br">🌷</span>
-                <p class="message-text">I promise to hold your hand through the brightest days and the darkest nights. You’ll never have to walk alone again. 🤝</p>
-                <span class="decoration-bl">🌿</span>
-            </div>
-        </div>
-
-        <div class="page" id="p6" style="z-index: 6;">
-            <div class="front">
-                <span class="decoration-tl">💜</span><img src="couple5.jpg"><span class="decoration-br">🌿</span>
-            </div>
-            <div class="back">
-                <span class="decoration-tr">🌷</span><span class="decoration-tl">✨</span><span class="decoration-bl">💜</span>
-                <p class="message-text">You are the melody that my heart beats to. Thank you for making even the simplest moments feel extraordinary. 💜</p>
-                <span class="decoration-br">⭐</span>
-            </div>
-        </div>
-
-        <div class="page" id="p7" style="z-index: 5;">
-            <div class="front">
-                <span class="decoration-tr">🌸</span><img src="couple6.jpg"><span class="decoration-bl">🍀</span>
-            </div>
-            <div class="back">
-                <span class="decoration-tl">🌿</span><span class="decoration-tr">💜</span><span class="decoration-br">📷</span>
-                <p class="message-text">Growing old with you is the only plan I ever want to keep. I can't wait to see all the places our love will take us. 📸</p>
-                <span class="decoration-bl">✨</span>
-            </div>
-        </div>
-
-        <div class="page" id="p8" style="z-index: 4;">
-            <div class="front">
-                <span class="decoration-tl">✨</span><img src="couple7.jpg"><span class="decoration-br">🌸</span>
-            </div>
-            <div class="back">
-                <span class="decoration-tr">🦋</span><span class="decoration-tl">🌿</span><span class="decoration-bl">🌸</span>
-                <p class="message-text">My heart belongs to you, and only you. Thank you for choosing me every single day, just as I choose you. 🔒</p>
-                <span class="decoration-br">✨</span>
-            </div>
-        </div>
-
-        <div class="page" id="p9" style="z-index: 3;">
-            <div class="front">
-                <span class="decoration-tr">🌿</span><img src="couple8.jpg"><span class="decoration-bl">✨</span>
-            </div>
-            <div class="back">
-                <span class="decoration-tl">💜</span><span class="decoration-tr">🌷</span><span class="decoration-br">🍬</span>
-                <p class="message-text">Thank you for dealing with my "toothache" moods! Your patience is a gift I never take for granted. You are the best. 👩‍❤️‍👨</p>
-                <span class="decoration-bl">✨</span>
-            </div>
-        </div>
-
-        <div class="page" id="p10" style="z-index: 2;">
-            <div class="front">
-                <span class="decoration-tl">🌸</span><img src="couple9.jpg"><span class="decoration-br">🍀</span>
-            </div>
-            <div class="back">
-                <span class="decoration-tr">✨</span><span class="decoration-tl">🦋</span><span class="decoration-bl">♾️</span>
-                <p class="message-text">This book might have an end, but our love is a circle that goes on forever. You are my everything, Langging. ♾️</p>
-                <span class="decoration-br">🌷</span>
             </div>
         </div>
 
         <div class="page" id="p11" style="z-index: 1;">
             <div class="front">
-                <span class="decoration-tr">🌿</span><img src="couple10.jpg"><span class="decoration-bl">💜</span>
+                <span class="decoration-tr">🏰</span><img src="couple10.jpg"><span class="decoration-bl">🍷</span>
             </div>
-            <div class="back">
-                <span class="decoration-tl">✨</span><span class="decoration-tr">🌸</span><span class="decoration-bl">🌿</span>
-                <h2 style="color: var(--purple);">Our Movie</h2>
+            <div class="back" style="background: #fffcf5;">
+                <span class="decoration-tl">✨</span><span class="decoration-tr">🌹</span><span class="decoration-bl">🌹</span>
+                <h2 style="color: var(--purple); font-family: 'Great Vibes', cursive; font-size: 2.5rem;">Our Movie</h2>
                 <button class="btn" onclick="openVideo()">▶ Watch Our Memories</button>
-                <p style="margin-top: 15px; font-weight: bold; color: var(--purple);">Happy Valentine's Day!</p>
+                <p style="margin-top: 20px; font-family: var(--handwriting); color: var(--purple); font-size: 1.5rem;">Happy Valentine's Day!</p>
                 <span class="decoration-br">✨</span>
             </div>
         </div>
@@ -266,8 +211,8 @@
 
     <div class="controls" id="controls">
         <button class="btn" onclick="prevPage()">Back</button>
-        <button class="btn" onclick="nextPage()">Next Page</button>
-        <button class="btn" id="autoBtn" onclick="toggleAuto()">Auto Play</button>
+        <button class="btn" onclick="nextPage()">Next</button>
+        <button class="btn" id="autoBtn" onclick="toggleAuto()">Auto</button>
     </div>
 
     <div id="video-overlay">
@@ -292,24 +237,35 @@
             constructor() { this.reset(); }
             reset() {
                 this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height - canvas.height;
-                this.size = Math.random() * 15 + 8;
-                this.speed = Math.random() * 2 + 1;
+                this.y = Math.random() * canvas.height + 100;
+                this.size = Math.random() * 10 + 5;
+                this.speed = Math.random() * 1 + 0.5;
                 this.type = Math.floor(Math.random() * 4);
-                this.color = `hsl(${Math.random() * 360}, 80%, 60%)`;
+                this.opacity = Math.random() * 0.5 + 0.2;
+                this.color = Math.random() > 0.5 ? '#d4af37' : '#a01a1a';
                 this.angle = Math.random() * Math.PI * 2;
             }
-            update() { this.y += this.speed; this.angle += 0.02; if (this.y > canvas.height) this.reset(); }
+            update() { 
+                this.y -= this.speed; 
+                this.angle += 0.01; 
+                if (this.y < -50) this.reset(); 
+            }
             draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
                 ctx.fillStyle = this.color;
                 ctx.font = `${this.size}px serif`;
-                let glyph = ['❤️', '🌸', '✨', '🌼'][this.type];
-                ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.angle);
-                ctx.fillText(glyph, 0, 0); ctx.restore();
+                let glyph = ['❤️', '🌹', '✨', '⚜️'][this.type];
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.fillText(glyph, 0, 0);
+                ctx.restore();
             }
         }
 
-        for(let i=0; i<70; i++) particles.push(new Particle());
+        for(let i=0; i<50; i++) particles.push(new Particle());
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -327,7 +283,10 @@
                 heart.style.display = 'none';
                 const book = document.getElementById('myBook');
                 book.style.display = 'block';
-                setTimeout(() => { book.style.opacity = '1'; document.getElementById('controls').style.display = 'flex'; }, 50);
+                setTimeout(() => { 
+                    book.style.opacity = '1'; 
+                    document.getElementById('controls').style.display = 'flex'; 
+                }, 50);
             }, 800);
         }
 
@@ -338,9 +297,9 @@
             auto = !auto;
             const btn = document.getElementById('autoBtn');
             if(auto) {
-                btn.style.background = "var(--yellow-green)"; btn.innerText = "Auto: ON";
-                interval = setInterval(() => { if(curr < total) nextPage(); else { clearInterval(interval); auto = false; btn.innerText = "Auto Play"; } }, 3500);
-            } else { clearInterval(interval); btn.innerText = "Auto Play"; }
+                btn.style.background = "var(--yellow-green)"; btn.style.color = "black";
+                interval = setInterval(() => { if(curr < total) nextPage(); else { clearInterval(interval); auto = false; } }, 4000);
+            } else { clearInterval(interval); btn.style.background = "#222"; btn.style.color = "var(--yellow-green)"; }
         }
 
         function openVideo() { document.getElementById('video-overlay').style.display = 'flex'; document.getElementById('myVideo').play(); document.getElementById('bgMusic').pause(); }
