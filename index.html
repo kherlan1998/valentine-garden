@@ -16,11 +16,13 @@
             --handwriting: 'Dancing Script', cursive;
         }
 
-        @media (max-width: 400px) {
+        @media (max-width: 450px) {
             :root {
-                --book-width: 300px;
-                --book-height: 440px;
+                --book-width: 280px;
+                --book-height: 420px;
             }
+            .message-text { font-size: 1rem !important; }
+            .cover-front h1 { font-size: 1.8rem !important; }
         }
 
         body {
@@ -29,7 +31,9 @@
             display: flex; justify-content: center; align-items: center;
             height: 100vh; overflow: hidden;
             font-family: 'Georgia', serif;
+            /* Added perspective origin to prevent left-side cropping */
             perspective: 2000px;
+            perspective-origin: 50% 50%;
         }
 
         #bgCanvas {
@@ -45,18 +49,20 @@
         .h-bl { bottom: 10px; left: 10px; color: var(--purple-heart); }
         .h-br { bottom: 10px; right: 10px; color: var(--red-heart); }
 
+        /* FIXED HEART: Improved Clip Path to prevent deformation */
         #heart-container {
             position: absolute;
-            width: 180px; height: 180px;
+            width: 150px; height: 150px;
             background: linear-gradient(45deg, var(--purple-bg), #6b0f0f);
-            clip-path: path('M110 200s-100-58-100-132c0-44 32-74 66-74 22 0 34 14 34 14s12-14 34-14c34 0 66 30 66 74 0 74-100 132-100 132z');
+            clip-path: path('M75 140 C-30 80 -30 10 75 10 C180 10 180 80 75 140Z');
             display: flex; justify-content: center; align-items: center;
             z-index: 2000; cursor: pointer; transition: 1s ease;
+            box-shadow: 0 0 30px rgba(160, 26, 26, 0.5);
         }
 
         #heart-button {
-            width: 50px; height: 50px; background: var(--gold);
-            clip-path: path('M30 55s-28-16-28-36c0-12 9-21 19-21 6 0 9 4 9 4s3-4 9-4c10 0 19 9 19 21 0 20-28 36-28 36z');
+            width: 40px; height: 40px; background: var(--gold);
+            clip-path: path('M20 37 C-8 21 -8 3 20 3 C48 3 48 21 20 37Z');
             animation: pulse 1.5s infinite;
         }
 
@@ -67,7 +73,9 @@
             width: var(--book-width); height: var(--book-height);
             transform-style: preserve-3d;
             display: none; opacity: 0;
-            transition: opacity 1s;
+            transition: opacity 1s, transform 1s;
+            /* Shift book slightly right so flipped pages don't go off-screen */
+            margin-left: 40px; 
         }
 
         .page {
@@ -93,10 +101,10 @@
         .front { border-radius: 0 15px 15px 0; z-index: 2; }
         .back { transform: rotateY(180deg); background: #fdfaf0; border-radius: 15px 0 0 15px; }
 
-        /* IMAGE FIX: object-fit contain prevents cropping */
+        /* IMAGE FIX: Contain ensures no cropping */
         .page img {
-            width: 100%;
-            height: 60%;
+            width: 90%;
+            height: 55%;
             object-fit: contain; 
             background: #fff;
             border-radius: 5px;
@@ -108,24 +116,28 @@
             font-family: var(--handwriting);
             font-size: 1.2rem; color: #3d0000;
             text-align: center; margin-top: 15px;
+            padding: 0 10px;
         }
 
         .cover-front {
             background: linear-gradient(135deg, #a01a1a, #6b0f0f) !important;
             color: var(--gold) !important;
             border: 8px double var(--gold) !important;
+            text-align: center;
         }
 
         .controls {
             position: fixed; bottom: 20px;
-            display: none; gap: 10px; z-index: 1100;
+            display: none; gap: 15px; z-index: 1100;
         }
 
         .btn {
-            padding: 8px 16px; background: #111; color: var(--gold);
-            border: 1px solid var(--gold); border-radius: 4px;
-            cursor: pointer; font-size: 0.75rem;
+            padding: 10px 20px; background: #111; color: var(--gold);
+            border: 1px solid var(--gold); border-radius: 25px;
+            cursor: pointer; font-size: 0.8rem; font-weight: bold;
+            transition: 0.3s;
         }
+        .btn:active { transform: scale(0.9); }
 
         .flipped { transform: rotateY(-180deg); }
 
@@ -147,10 +159,10 @@
     <div class="book" id="myBook">
         <div class="page" id="p1" style="z-index: 12;">
             <div class="front cover-front">
-                <h2>February 14 2026</h2>
-                <h1>Happy Valentines day</h1>
+                <h3 style="font-size: 0.9rem; margin-bottom: 0;">February 14, 2026</h3>
+                <h1 style="font-family: 'Great Vibes'; margin: 10px 0;">Happy Valentine's Day</h1>
                 <h2 style="color: white; font-family: var(--handwriting);">For My Langging</h2>
-                <div style="font-size: 3rem; margin: 15px;">🌹</div>
+                <div style="font-size: 3rem; margin: 10px;">🌹</div>
                 <div style="font-family: var(--handwriting); color:var(--gold);">from your tooth ache lang2x</div>
             </div>
             <div class="back">
@@ -264,7 +276,7 @@
 
     <div class="controls" id="controls">
         <button class="btn" onclick="prevPage()">Back</button>
-        <button class="btn" onclick="nextPage()">Next</button>
+        <button class="btn" onclick="nextPage()">Open</button>
         <button class="btn" id="autoBtn" onclick="toggleAuto()">Auto</button>
     </div>
 
@@ -318,10 +330,15 @@
 
         function openBook() {
             document.getElementById('bgMusic').play().catch(() => {});
-            document.getElementById('heart-container').style.display = 'none';
+            document.getElementById('heart-container').style.opacity = '0';
+            setTimeout(() => { document.getElementById('heart-container').style.display = 'none'; }, 1000);
+            
             const book = document.getElementById('myBook');
             book.style.display = 'block';
-            setTimeout(() => { book.style.opacity = '1'; document.getElementById('controls').style.display = 'flex'; }, 50);
+            setTimeout(() => { 
+                book.style.opacity = '1'; 
+                document.getElementById('controls').style.display = 'flex'; 
+            }, 100);
         }
 
         function nextPage() { if(curr < total) { document.getElementById(`p${curr}`).classList.add('flipped'); curr++; } }
