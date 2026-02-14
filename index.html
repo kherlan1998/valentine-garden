@@ -42,7 +42,7 @@
             z-index: -1; pointer-events: none;
         }
 
-        /* NEW INTRO CARD UI */
+        /* INTRO CARD UI */
         #intro-overlay {
             position: absolute;
             z-index: 2500;
@@ -51,7 +51,7 @@
             align-items: center;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.8);
             transition: opacity 1s ease;
         }
 
@@ -63,7 +63,6 @@
             text-align: center;
             border: 4px double var(--gold);
             box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
-            position: relative;
         }
 
         .intro-card h2 {
@@ -71,13 +70,6 @@
             color: var(--purple-bg);
             font-size: 2.2rem;
             margin-bottom: 10px;
-        }
-
-        .intro-card p {
-            font-family: var(--handwriting);
-            font-size: 1.3rem;
-            color: #444;
-            margin-bottom: 25px;
         }
 
         .btn-continue {
@@ -90,12 +82,6 @@
             cursor: pointer;
             font-weight: bold;
             transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn-continue:hover {
-            transform: scale(1.05);
-            background: #6b0f0f;
         }
 
         /* BOOK STYLES */
@@ -132,10 +118,11 @@
         .back { transform: rotateY(180deg); background: #fdfaf0; border-radius: 15px 0 0 15px; }
 
         .page img {
-            width: 90%; height: 55%;
-            object-fit: contain; background: #fff;
-            border-radius: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border: 2px solid #eee;
+            width: 90%; height: 60%;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 3px solid #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
         .message-text {
@@ -174,9 +161,9 @@
     <div id="intro-overlay">
         <div class="intro-card">
             <h2>Happy Valentine's Day</h2>
-            <p>I have a little something for you... <br>to my one and only Langging.</p>
+            <p style="font-family: var(--handwriting); font-size: 1.2rem;">I have a little something for you... <br>to my one and only Langging.</p>
             <button class="btn-continue" onclick="openBook()">Open My Heart</button>
-            <div style="margin-top:20px; font-size: 1.5rem;">💌</div>
+            <div style="margin-top:20px; font-size: 1.5rem;">🎁</div>
         </div>
     </div>
 
@@ -194,10 +181,17 @@
             </div>
         </div>
 
-        <div class="page" id="p2" style="z-index: 11;">
-            <div class="front"><img src="couple1.jpg"></div>
-            <div class="back"><p class="message-text">Your smile is my favorite view. ☀️</p></div>
-        </div>
+        <div class="page" id="p2" style="z-index: 11;"><div class="front"><img src="couple1.jpg"></div><div class="back"><p class="message-text">Your smile is my favorite view. ☀️</p></div></div>
+        <div class="page" id="p3" style="z-index: 10;"><div class="front"><img src="couple2.jpg"></div><div class="back"><p class="message-text">In your arms, everything is perfect. 🏡</p></div></div>
+        <div class="page" id="p4" style="z-index: 9;"><div class="front"><img src="couple3.jpg"></div><div class="back"><p class="message-text">You are my best friend and my love. 🎵</p></div></div>
+        <div class="page" id="p5" style="z-index: 8;"><div class="front"><img src="couple4.jpg"></div><div class="back"><p class="message-text">I love you more than words can say. 🤝</p></div></div>
+        <div class="page" id="p6" style="z-index: 7;"><div class="front"><img src="couple5.jpg"></div><div class="back"><p class="message-text">Every moment with you is a gift. 💜</p></div></div>
+        <div class="page" id="p7" style="z-index: 6;"><div class="front"><img src="couple6.jpg"></div><div class="back"><p class="message-text">My favorite place is being with you. 📸</p></div></div>
+        <div class="page" id="p8" style="z-index: 5;"><div class="front"><img src="couple7.jpg"></div><div class="back"><p class="message-text">You have my whole heart, always. 🔒</p></div></div>
+        <div class="page" id="p9" style="z-index: 4;"><div class="front"><img src="couple8.jpg"></div><div class="back"><p class="message-text">Forever isn't long enough with you. 👩‍❤️‍👨</p></div></div>
+        <div class="page" id="p10" style="z-index: 3;"><div class="front"><img src="couple9.jpg"></div><div class="back"><p class="message-text">You are my greatest blessing. ♾️</p></div></div>
+        <div class="page" id="p11" style="z-index: 2;"><div class="front"><img src="couple10.jpg"></div><div class="back"><p class="message-text">To the moon and back. 🥂</p></div></div>
+
         <div class="page" id="p12" style="z-index: 1;">
             <div class="front">
                 <h2 style="color: var(--purple-bg); font-family: 'Great Vibes', cursive; font-size: 2rem;">Our Memories</h2>
@@ -258,7 +252,6 @@
         }
         animate();
 
-        // Interaction Logic
         function openBook() {
             document.getElementById('bgMusic').play().catch(() => {});
             const intro = document.getElementById('intro-overlay');
@@ -276,6 +269,7 @@
 
         function nextPage() { if(curr < total) { document.getElementById(`p${curr}`).classList.add('flipped'); curr++; } }
         function prevPage() { if(curr > 1) { curr--; document.getElementById(`p${curr}`).classList.remove('flipped'); } }
+        
         function toggleAuto() {
             auto = !auto;
             const btn = document.getElementById('autoBtn');
@@ -284,6 +278,7 @@
                 interval = setInterval(() => { if(curr < total) nextPage(); else clearInterval(interval); }, 4000);
             } else { clearInterval(interval); btn.innerText = "Auto"; }
         }
+
         function openVideo() { document.getElementById('video-overlay').style.display = 'flex'; document.getElementById('myVideo').play(); document.getElementById('bgMusic').pause(); }
         function closeVideo() { document.getElementById('video-overlay').style.display = 'none'; document.getElementById('myVideo').pause(); document.getElementById('bgMusic').play(); }
     </script>
