@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Digital Garden</title>
+    <title>For My Langging</title>
     <style>
         :root {
             --purple: #8e44ad;
             --yellow-green: #9acd32;
+            --book-width: 300px;
+            --book-height: 400px;
         }
 
         body {
@@ -19,229 +21,254 @@
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            font-family: 'Arial', sans-serif;
-            color: white;
+            font-family: 'Georgia', serif;
+            perspective: 1500px;
         }
 
-        /* The Big Heart Container */
+        /* Heart Start Screen */
         #heart-container {
-            position: relative;
-            width: 300px;
-            height: 300px;
+            position: absolute;
+            width: 250px;
+            height: 250px;
             background: linear-gradient(45deg, var(--purple), var(--yellow-green));
-            clip-path: path('M150 280s-140-80-140-180c0-60 40-100 90-100 30 0 50 20 50 20s20-20 50-20c50 0 90 40 90 100 0 100-140 180-140 180z');
+            clip-path: path('M125 230s-115-65-115-150c0-50 35-85 75-85 25 0 40 15 40 15s15-15 40-15c40 0 75 35 75 85 0 85-115 150-115 150z');
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 0 50px rgba(142, 68, 173, 0.5);
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 10;
+            z-index: 100;
+            transition: all 1s ease;
+            cursor: pointer;
         }
 
         #heart-button {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(-45deg, var(--yellow-green), var(--purple));
-            clip-path: path('M40 75s-37-21-37-48c0-16 11-27 24-27 8 0 13 5 13 5s5-5 13-5c13 0 24 11 24 27 0 27-37 48-37 48z');
+            width: 60px;
+            height: 60px;
+            background: white;
+            clip-path: path('M30 55s-28-16-28-36c0-12 9-21 19-21 6 0 9 4 9 4s3-4 9-4c10 0 19 9 19 21 0 20-28 36-28 36z');
             border: none;
-            cursor: pointer;
-            z-index: 11;
             animation: pulse 1.5s infinite;
         }
 
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.15); }
+            50% { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
 
-        /* Main Image Display - Realistic & Polished */
-        #main-photo {
-            position: absolute;
-            max-width: 85%;
-            max-height: 70%;
-            border: 4px solid white;
-            border-radius: 4px;
-            opacity: 0;
-            transform: scale(0.8) translateY(20px);
-            transition: all 1.5s ease-out;
-            z-index: 5;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            object-fit: cover;
+        /* 3D Book Styling */
+        .book {
+            position: relative;
+            width: var(--book-width);
+            height: var(--book-height);
+            transition: transform 1s;
+            transform-style: preserve-3d;
+            display: none; /* Hidden until heart is clicked */
         }
+
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: white;
+            transform-origin: left;
+            transform-style: preserve-3d;
+            transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+            color: #333;
+            box-shadow: inset 3px 0px 20px rgba(0,0,0,0.1);
+        }
+
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+        }
+
+        .back {
+            transform: rotateY(180deg);
+            background-color: #f9f9f9;
+        }
+
+        .page img {
+            width: 90%;
+            height: 70%;
+            object-fit: cover;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .message {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--purple);
+            font-style: italic;
+        }
+
+        /* Book Cover */
+        .cover {
+            background: linear-gradient(135deg, var(--purple), #4a148c) !important;
+            color: white !important;
+        }
+
+        /* Controls */
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            display: none;
+            gap: 10px;
+            z-index: 200;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: var(--purple);
+            color: white;
+            border: 1px solid var(--yellow-green);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        /* Animations */
+        .flipped { transform: rotateY(-180deg); }
 
         .falling {
             position: absolute;
             top: -50px;
-            font-size: 25px;
-            user-select: none;
-            z-index: 2;
+            z-index: 1;
             animation: fall linear forwards;
         }
-
-        @keyframes fall {
-            to { transform: translateY(110vh) rotate(360deg); }
-        }
-
-        #fireworks-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1; /* Keep fireworks behind photo and buttons */
-        }
-
-        .btn-group {
-            position: fixed;
-            bottom: 40px;
-            display: none;
-            gap: 15px;
-            z-index: 100;
-        }
-
-        .custom-btn {
-            padding: 12px 25px;
-            background: rgba(142, 68, 173, 0.8);
-            color: white;
-            border: 2px solid var(--yellow-green);
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: bold;
-            backdrop-filter: blur(5px);
-            transition: 0.3s;
-        }
-
-        .custom-btn:hover {
-            background: var(--yellow-green);
-            color: black;
-            transform: translateY(-3px);
-        }
-
-        #video-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 200;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        video {
-            width: 90%;
-            max-width: 400px;
-            border-radius: 12px;
-            box-shadow: 0 0 20px var(--purple);
-        }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <canvas id="fireworks-canvas"></canvas>
-
-    <div id="heart-container">
-        <button id="heart-button" onclick="bloom()"></button>
+    <div id="heart-container" onclick="openBook()">
+        <div id="heart-button"></div>
     </div>
 
-    <img id="main-photo" src="couple.jpg" alt="Our Memory">
+    <div class="book" id="myBook">
+        <div class="page cover" id="p1">
+            <div class="front">
+                <h1>Happy Valentine's Day</h1>
+                <h2 style="color: var(--yellow-green);">Langging</h2>
+                <p>Click "Next" to see our story...</p>
+            </div>
+            <div class="back"><img src="couple1.jpg"><p class="message">Every moment with you is a gift.</p></div>
+        </div>
 
-    <div class="btn-group" id="controls">
-        <button class="custom-btn" onclick="location.reload()">Reset</button>
-        <button class="custom-btn" onclick="openVideo()">Our Memories</button>
+        <div class="page" id="p2">
+            <div class="front"><img src="couple2.jpg"><p class="message">My favorite place in the world is next to you.</p></div>
+            <div class="back"><img src="couple3.jpg"><p class="message">You make my heart smile every single day.</p></div>
+        </div>
+
+        <div class="page" id="p3">
+            <div class="front"><img src="couple4.jpg"><p class="message">To more adventures together, Langging.</p></div>
+            <div class="back"><img src="couple5.jpg"><p class="message">Thank you for being mine.</p></div>
+        </div>
+
+        <div class="page" id="p4">
+            <div class="front"><img src="couple6.jpg"><p class="message">You are my today and all of my tomorrows.</p></div>
+            <div class="back"><img src="couple7.jpg"><p class="message">In your arms is where I belong.</p></div>
+        </div>
+
+        <div class="page" id="p5">
+            <div class="front"><img src="couple8.jpg"><p class="message">I love you more than words can say.</p></div>
+            <div class="back">
+                <h2>Our Memories</h2>
+                <button class="btn" onclick="openVideo()">Play Video</button>
+                <p class="message">Forever & Always</p>
+            </div>
+        </div>
     </div>
 
-    <div id="video-overlay">
-        <video id="myVideo" controls>
-            <source src="memories.mp4" type="video/mp4">
-        </video>
-        <button class="custom-btn" style="margin-top: 25px;" onclick="closeVideo()">Close</button>
+    <div class="controls" id="controls">
+        <button class="btn" onclick="prevPage()">Previous</button>
+        <button class="btn" onclick="nextPage()">Next Page</button>
+        <button class="btn" id="autoBtn" onclick="toggleAuto()">Auto Play: OFF</button>
+        <button class="btn" onclick="location.reload()">Reset</button>
+    </div>
+
+    <div id="video-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:300; display:none; justify-content:center; align-items:center; flex-direction:column;">
+        <video id="myVideo" width="300" controls><source src="memories.mp4" type="video/mp4"></video>
+        <button class="btn" style="margin-top:20px;" onclick="closeVideo()">Close</button>
     </div>
 
     <audio id="bgMusic" src="valentine.mp3" loop></audio>
 
     <script>
-        function bloom() {
-            const music = document.getElementById('bgMusic');
-            music.play().catch(e => console.log("Audio needs user interaction first"));
-            
-            document.getElementById('heart-container').style.transform = 'scale(0) rotate(180deg)';
-            document.getElementById('heart-container').style.opacity = '0';
-            
-            const photo = document.getElementById('main-photo');
-            photo.style.opacity = '1';
-            photo.style.transform = 'scale(1) translateY(0)';
+        let currentPage = 1;
+        const totalPages = 5;
+        let autoPlay = false;
+        let autoInterval;
 
-            setInterval(createFallingElement, 400);
-            startFireworks();
-
+        function openBook() {
+            document.getElementById('bgMusic').play();
+            document.getElementById('heart-container').style.transform = 'scale(0)';
             setTimeout(() => {
+                document.getElementById('heart-container').style.display = 'none';
+                document.getElementById('myBook').style.display = 'block';
                 document.getElementById('controls').style.display = 'flex';
-            }, 2500);
+                setInterval(createFalling, 400);
+            }, 1000);
         }
 
-        function createFallingElement() {
-            const items = ['🌸', '💜', '🍃', '✨', '❤️', '🌼'];
+        function nextPage() {
+            if(currentPage < totalPages) {
+                const page = document.getElementById(`p${currentPage}`);
+                page.classList.add('flipped');
+                page.style.zIndex = currentPage;
+                currentPage++;
+            }
+        }
+
+        function prevPage() {
+            if(currentPage > 1) {
+                currentPage--;
+                const page = document.getElementById(`p${currentPage}`);
+                page.classList.remove('flipped');
+            }
+        }
+
+        function toggleAuto() {
+            autoPlay = !autoPlay;
+            const btn = document.getElementById('autoBtn');
+            if(autoPlay) {
+                btn.innerText = "Auto Play: ON";
+                autoInterval = setInterval(() => {
+                    if(currentPage < totalPages) nextPage();
+                    else {
+                        clearInterval(autoInterval);
+                        autoPlay = false;
+                        btn.innerText = "Auto Play: OFF";
+                    }
+                }, 3000);
+            } else {
+                btn.innerText = "Auto Play: OFF";
+                clearInterval(autoInterval);
+            }
+        }
+
+        function createFalling() {
+            const items = ['🌸', '💜', '🍃', '❤️'];
             const el = document.createElement('div');
             el.className = 'falling';
             el.innerHTML = items[Math.floor(Math.random() * items.length)];
             el.style.left = Math.random() * 100 + 'vw';
-            el.style.animationDuration = (Math.random() * 2 + 3) + 's';
-            el.style.opacity = Math.random();
+            el.style.fontSize = Math.random() * 20 + 10 + 'px';
+            el.style.animationDuration = Math.random() * 3 + 2 + 's';
             document.body.appendChild(el);
             setTimeout(() => el.remove(), 5000);
-        }
-
-        function startFireworks() {
-            const canvas = document.getElementById('fireworks-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            const particles = [];
-            class Particle {
-                constructor(x, y) {
-                    this.x = x; this.y = y;
-                    this.radius = Math.random() * 2 + 1;
-                    this.color = `hsl(${Math.random() * 360}, 100%, 60%)`;
-                    this.velocity = { x: Math.random() * 4 - 2, y: Math.random() * 4 - 2 };
-                    this.life = 100;
-                }
-                draw() {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = this.color;
-                    ctx.globalAlpha = this.life / 100;
-                    ctx.fill();
-                }
-                update() {
-                    this.x += this.velocity.x; this.y += this.velocity.y;
-                    this.life -= 0.8;
-                }
-            }
-
-            function animate() {
-                ctx.fillStyle = 'rgba(11, 11, 11, 0.2)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                if (Math.random() < 0.05) {
-                    const x = Math.random() * canvas.width;
-                    const y = Math.random() * canvas.height / 2;
-                    for(let i=0; i<30; i++) particles.push(new Particle(x, y));
-                }
-
-                particles.forEach((p, i) => {
-                    if (p.life <= 0) particles.splice(i, 1);
-                    else { p.update(); p.draw(); }
-                });
-                requestAnimationFrame(animate);
-            }
-            animate();
         }
 
         function openVideo() {
