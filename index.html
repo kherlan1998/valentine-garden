@@ -23,6 +23,7 @@
             }
             .message-text { font-size: 1rem !important; }
             .cover-front h1 { font-size: 1.8rem !important; }
+            .intro-card { width: 85% !important; }
         }
 
         body {
@@ -31,7 +32,6 @@
             display: flex; justify-content: center; align-items: center;
             height: 100vh; overflow: hidden;
             font-family: 'Georgia', serif;
-            /* Added perspective origin to prevent left-side cropping */
             perspective: 2000px;
             perspective-origin: 50% 50%;
         }
@@ -42,39 +42,69 @@
             z-index: -1; pointer-events: none;
         }
 
-        /* Heart Corner Decorations */
-        .heart-deco { position: absolute; font-size: 1.2rem; z-index: 10; filter: drop-shadow(0 0 5px rgba(0,0,0,0.2)); }
-        .h-tl { top: 10px; left: 10px; color: var(--red-heart); }
-        .h-tr { top: 10px; right: 10px; color: var(--purple-heart); }
-        .h-bl { bottom: 10px; left: 10px; color: var(--purple-heart); }
-        .h-br { bottom: 10px; right: 10px; color: var(--red-heart); }
-
-        /* FIXED HEART: Improved Clip Path to prevent deformation */
-        #heart-container {
+        /* NEW INTRO CARD UI */
+        #intro-overlay {
             position: absolute;
-            width: 150px; height: 150px;
-            background: linear-gradient(45deg, var(--purple-bg), #6b0f0f);
-            clip-path: path('M75 140 C-30 80 -30 10 75 10 C180 10 180 80 75 140Z');
-            display: flex; justify-content: center; align-items: center;
-            z-index: 2000; cursor: pointer; transition: 1s ease;
-            box-shadow: 0 0 30px rgba(160, 26, 26, 0.5);
+            z-index: 2500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            transition: opacity 1s ease;
         }
 
-        #heart-button {
-            width: 40px; height: 40px; background: var(--gold);
-            clip-path: path('M20 37 C-8 21 -8 3 20 3 C48 3 48 21 20 37Z');
-            animation: pulse 1.5s infinite;
+        .intro-card {
+            width: 350px;
+            background: #fffcf5;
+            padding: 40px 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 4px double var(--gold);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+            position: relative;
         }
 
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+        .intro-card h2 {
+            font-family: 'Great Vibes', cursive;
+            color: var(--purple-bg);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
 
+        .intro-card p {
+            font-family: var(--handwriting);
+            font-size: 1.3rem;
+            color: #444;
+            margin-bottom: 25px;
+        }
+
+        .btn-continue {
+            background: var(--purple-bg);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-continue:hover {
+            transform: scale(1.05);
+            background: #6b0f0f;
+        }
+
+        /* BOOK STYLES */
         .book {
             position: relative;
             width: var(--book-width); height: var(--book-height);
             transform-style: preserve-3d;
             display: none; opacity: 0;
             transition: opacity 1s, transform 1s;
-            /* Shift book slightly right so flipped pages don't go off-screen */
             margin-left: 40px; 
         }
 
@@ -101,14 +131,10 @@
         .front { border-radius: 0 15px 15px 0; z-index: 2; }
         .back { transform: rotateY(180deg); background: #fdfaf0; border-radius: 15px 0 0 15px; }
 
-        /* IMAGE FIX: Contain ensures no cropping */
         .page img {
-            width: 90%;
-            height: 55%;
-            object-fit: contain; 
-            background: #fff;
-            border-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 90%; height: 55%;
+            object-fit: contain; background: #fff;
+            border-radius: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             border: 2px solid #eee;
         }
 
@@ -116,28 +142,21 @@
             font-family: var(--handwriting);
             font-size: 1.2rem; color: #3d0000;
             text-align: center; margin-top: 15px;
-            padding: 0 10px;
         }
 
         .cover-front {
             background: linear-gradient(135deg, #a01a1a, #6b0f0f) !important;
             color: var(--gold) !important;
             border: 8px double var(--gold) !important;
-            text-align: center;
         }
 
-        .controls {
-            position: fixed; bottom: 20px;
-            display: none; gap: 15px; z-index: 1100;
-        }
+        .controls { position: fixed; bottom: 20px; display: none; gap: 15px; z-index: 1100; }
 
         .btn {
             padding: 10px 20px; background: #111; color: var(--gold);
             border: 1px solid var(--gold); border-radius: 25px;
-            cursor: pointer; font-size: 0.8rem; font-weight: bold;
-            transition: 0.3s;
+            cursor: pointer; font-size: 0.8rem;
         }
-        .btn:active { transform: scale(0.9); }
 
         .flipped { transform: rotateY(-180deg); }
 
@@ -152,8 +171,13 @@
 
     <canvas id="bgCanvas"></canvas>
 
-    <div id="heart-container" onclick="openBook()">
-        <div id="heart-button"></div>
+    <div id="intro-overlay">
+        <div class="intro-card">
+            <h2>Happy Valentine's Day</h2>
+            <p>I have a little something for you... <br>to my one and only Langging.</p>
+            <button class="btn-continue" onclick="openBook()">Open My Heart</button>
+            <div style="margin-top:20px; font-size: 1.5rem;">💌</div>
+        </div>
     </div>
 
     <div class="book" id="myBook">
@@ -166,109 +190,19 @@
                 <div style="font-family: var(--handwriting); color:var(--gold);">from your tooth ache lang2x</div>
             </div>
             <div class="back">
-                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
-                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
                 <p class="message-text">My life truly began the moment our paths crossed. Every day feels like a fairytale. ❤️</p>
             </div>
         </div>
 
         <div class="page" id="p2" style="z-index: 11;">
-            <div class="front">
-                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
-                <img src="couple1.jpg">
-                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
-            </div>
+            <div class="front"><img src="couple1.jpg"></div>
             <div class="back"><p class="message-text">Your smile is my favorite view. ☀️</p></div>
         </div>
-
-        <div class="page" id="p3" style="z-index: 10;">
-            <div class="front">
-                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
-                <img src="couple2.jpg">
-                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
-            </div>
-            <div class="back"><p class="message-text">In your arms, everything is perfect. 🏡</p></div>
-        </div>
-
-        <div class="page" id="p4" style="z-index: 9;">
-            <div class="front">
-                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
-                <img src="couple3.jpg">
-                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
-            </div>
-            <div class="back"><p class="message-text">You are my best friend and my love. 🎵</p></div>
-        </div>
-
-        <div class="page" id="p5" style="z-index: 8;">
-            <div class="front">
-                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
-                <img src="couple4.jpg">
-                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
-            </div>
-            <div class="back"><p class="message-text">I love you more than words can say. 🤝</p></div>
-        </div>
-
-        <div class="page" id="p6" style="z-index: 7;">
-            <div class="front">
-                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
-                <img src="couple5.jpg">
-                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
-            </div>
-            <div class="back"><p class="message-text">Every moment with you is a gift. 💜</p></div>
-        </div>
-
-        <div class="page" id="p7" style="z-index: 6;">
-            <div class="front">
-                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
-                <img src="couple6.jpg">
-                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
-            </div>
-            <div class="back"><p class="message-text">My favorite place is being with you. 📸</p></div>
-        </div>
-
-        <div class="page" id="p8" style="z-index: 5;">
-            <div class="front">
-                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
-                <img src="couple7.jpg">
-                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
-            </div>
-            <div class="back"><p class="message-text">You have my whole heart, always. 🔒</p></div>
-        </div>
-
-        <div class="page" id="p9" style="z-index: 4;">
-            <div class="front">
-                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
-                <img src="couple8.jpg">
-                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
-            </div>
-            <div class="back"><p class="message-text">Forever isn't long enough with you. 👩‍❤️‍👨</p></div>
-        </div>
-
-        <div class="page" id="p10" style="z-index: 3;">
-            <div class="front">
-                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
-                <img src="couple9.jpg">
-                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
-            </div>
-            <div class="back"><p class="message-text">You are my greatest blessing. ♾️</p></div>
-        </div>
-
-        <div class="page" id="p11" style="z-index: 2;">
-            <div class="front">
-                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
-                <img src="couple10.jpg">
-                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
-            </div>
-            <div class="back"><p class="message-text">To the moon and back. 🥂</p></div>
-        </div>
-
         <div class="page" id="p12" style="z-index: 1;">
             <div class="front">
-                <span class="heart-deco h-tl">❤️</span><span class="heart-deco h-tr">💜</span>
                 <h2 style="color: var(--purple-bg); font-family: 'Great Vibes', cursive; font-size: 2rem;">Our Memories</h2>
                 <button class="btn" onclick="openVideo()">▶ Watch Video</button>
-                <p style="margin-top: 15px; font-family: var(--handwriting); color: var(--purple-bg); font-size: 1.2rem;">Happy Valentine's Day!</p>
-                <span class="heart-deco h-bl">💜</span><span class="heart-deco h-br">❤️</span>
+                <p style="margin-top: 15px; font-family: var(--handwriting); color: var(--purple-bg);">Happy Valentine's Day!</p>
             </div>
             <div class="back"></div>
         </div>
@@ -276,7 +210,7 @@
 
     <div class="controls" id="controls">
         <button class="btn" onclick="prevPage()">Back</button>
-        <button class="btn" onclick="nextPage()">Open</button>
+        <button class="btn" onclick="nextPage()">Next</button>
         <button class="btn" id="autoBtn" onclick="toggleAuto()">Auto</button>
     </div>
 
@@ -291,10 +225,10 @@
         let curr = 1; const total = 12;
         let auto = false; let interval;
 
+        // Background Particles
         const canvas = document.getElementById('bgCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-
         function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.onresize = resize; resize();
 
@@ -305,22 +239,18 @@
                 this.y = Math.random() * canvas.height + 100;
                 this.size = Math.random() * 8 + 4;
                 this.speed = Math.random() * 1 + 0.5;
-                this.type = Math.floor(Math.random() * 2);
-                this.color = this.type === 0 ? '#e74c3c' : '#8e44ad';
-                this.angle = Math.random() * Math.PI * 2;
+                this.color = Math.random() > 0.5 ? '#e74c3c' : '#8e44ad';
             }
             update() { this.y -= this.speed; if (this.y < -50) this.reset(); }
             draw() {
                 ctx.save(); ctx.globalAlpha = 0.3;
                 ctx.fillStyle = this.color;
                 ctx.font = `${this.size}px serif`;
-                ctx.translate(this.x, this.y); ctx.rotate(this.angle);
-                ctx.fillText('❤️', 0, 0); ctx.restore();
+                ctx.fillText('❤️', this.x, this.y);
+                ctx.restore();
             }
         }
-
         for(let i=0; i<40; i++) particles.push(new Particle());
-
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => { p.update(); p.draw(); });
@@ -328,22 +258,24 @@
         }
         animate();
 
+        // Interaction Logic
         function openBook() {
             document.getElementById('bgMusic').play().catch(() => {});
-            document.getElementById('heart-container').style.opacity = '0';
-            setTimeout(() => { document.getElementById('heart-container').style.display = 'none'; }, 1000);
-            
-            const book = document.getElementById('myBook');
-            book.style.display = 'block';
+            const intro = document.getElementById('intro-overlay');
+            intro.style.opacity = '0';
             setTimeout(() => { 
-                book.style.opacity = '1'; 
-                document.getElementById('controls').style.display = 'flex'; 
-            }, 100);
+                intro.style.display = 'none'; 
+                const book = document.getElementById('myBook');
+                book.style.display = 'block';
+                setTimeout(() => { 
+                    book.style.opacity = '1'; 
+                    document.getElementById('controls').style.display = 'flex'; 
+                }, 100);
+            }, 1000);
         }
 
         function nextPage() { if(curr < total) { document.getElementById(`p${curr}`).classList.add('flipped'); curr++; } }
         function prevPage() { if(curr > 1) { curr--; document.getElementById(`p${curr}`).classList.remove('flipped'); } }
-
         function toggleAuto() {
             auto = !auto;
             const btn = document.getElementById('autoBtn');
@@ -352,7 +284,6 @@
                 interval = setInterval(() => { if(curr < total) nextPage(); else clearInterval(interval); }, 4000);
             } else { clearInterval(interval); btn.innerText = "Auto"; }
         }
-
         function openVideo() { document.getElementById('video-overlay').style.display = 'flex'; document.getElementById('myVideo').play(); document.getElementById('bgMusic').pause(); }
         function closeVideo() { document.getElementById('video-overlay').style.display = 'none'; document.getElementById('myVideo').pause(); document.getElementById('bgMusic').play(); }
     </script>
